@@ -1,31 +1,270 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ejercicio To Do App</title>
 
-    <link rel="stylesheet" href="css/style.css" />
-  </head>
-  <body>
-    <h1>Ejercicio To Do App</h1>
+<!doctype html>
 
-    <div class="header">
-      <h2>Mi lista</h2>
-      <input
-        type="text"
-        id="miInput"
-        placeholder="Ingresa el título de la tarea"
-      />
-      <button type="button" id="btn" class="addBtn">Agregar</button>
-    </div>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Codelab: Como usar los módulos en JavaScript</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14" ga4id=""></google-codelab-analytics>
+  <google-codelab codelab-gaid=""
+                  codelab-ga4id=""
+                  id="javascript-modules"
+                  title="Codelab: Como usar los módulos en JavaScript"
+                  environment="web"
+                  feedback-link="">
+    
+      <google-codelab-step label="Objetivo" duration="0">
+        <p>En este codelab, aprenderas como puedes usar los módulos en JavaScript con un ejemplo práctico. Recuerda que los módulos JavaScript son archivos individuales o piezas de código que pueden exportar funciones, objetos o variables para ser utilizados en otras partes de la aplicación. La principal ventaja de usar módulos es que permiten dividir el código en bloques lógicos más pequeños que pueden ser desarrollados, probados y depurados de manera independiente. Al final de este codelab tendrás todo lo necesario para dividir tu código en partes mas pequeñas.</p>
+<p class="image-container"><img alt="javascript-modules" src="img\\dfc2f2c8046d3c39.png"></p>
 
-    <ul id="miUL">
-      <li>Hola</li>
-      <li>Hola</li>
-    </ul>
 
-    <script src="javascript/ejercicio-todoApp.js"></script>
-  </body>
+      </google-codelab-step>
+    
+      <google-codelab-step label="Sección 1 - Todo APP (sin módulos)" duration="15">
+        <p>Antes de comenzar a modularizar, vamos a explicar un poco el código presente en este ejemplo de una aplicación básica de creación de tareas (todoApp).</p>
+<h2 is-upgraded>Index (HTML)</h2>
+<p>En este ejemplo tenemos, primero un documento de HTML <code>index.html</code>, que contiene principalmente un <code>input</code> para que puedas ingresar el texto de la tarea y un <code>button</code> para que una vez ingresado el texto se cree una nueva tarea, la cual se irá agregando en la lista no ordenada <code>ul</code> que contiene todas las tareas agregadas. Todo esto lo vemos en el siguiente código.</p>
+<pre><code language="language-bash" class="language-bash">&lt;!DOCTYPE html&gt;
+&lt;html lang=&#34;en&#34;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&#34;UTF-8&#34; /&gt;
+    &lt;meta http-equiv=&#34;X-UA-Compatible&#34; content=&#34;IE=edge&#34; /&gt;
+    &lt;meta name=&#34;viewport&#34; content=&#34;width=device-width, initial-scale=1.0&#34; /&gt;
+    &lt;title&gt;Ejercicio To Do App&lt;/title&gt;
+
+    &lt;link rel=&#34;stylesheet&#34; href=&#34;css/style.css&#34; /&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Ejercicio To Do App&lt;/h1&gt;
+
+    &lt;div class=&#34;header&#34;&gt;
+      &lt;h2&gt;Mi lista&lt;/h2&gt;
+      &lt;input
+        type=&#34;text&#34;
+        id=&#34;miInput&#34;
+        placeholder=&#34;Ingresa el título de la tarea&#34;
+      /&gt;
+      &lt;button type=&#34;button&#34; id=&#34;btn&#34; class=&#34;addBtn&#34;&gt;Agregar&lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;ul id=&#34;miUL&#34;&gt;
+      &lt;li&gt;Hola&lt;/li&gt;
+      &lt;li&gt;Hola&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;script src=&#34;javascript/ejercicio-todoApp.js&#34;&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<h2 is-upgraded>ejercicio-todoApp.js (JavaScript)</h2>
+<p>En la carpeta <code>ejercicio-todoApp.js</code>, tendremos la lógica para que nuestra aplicación de tareas funcione, a continuación te explicare cada parte de este código.</p>
+<h4 is-upgraded>1. Selección de lista (ul) y agregar funcionalidad a los items</h4>
+<p>Primero seleccionamos la lista para poder agregar a cada elemento de la lista las funcionalidades del todoAPP</p>
+<pre><code language="language-bash" class="language-bash">// Seleccionamos la lista
+let miLista = document.getElementsByTagName(&#34;li&#34;);
+</code></pre>
+<p>Una vez tenemos la lista, primero agregamos el botón de eliminar la tarea. Esto lo hacemos mediante un <code>for</code> para recorrer la lista y a cada <code>item</code> le agregamos un <code>span</code> que hará las veces de botón y que removerá el li donde haya sido cliqueado.</p>
+<pre><code language="language-bash" class="language-bash">// Creamos un boton eliminar y lo agregamos a cada elemento de la lista
+for (let i = 0; i &lt; miLista.length; i++) {
+  let span = document.createElement(&#34;span&#34;);
+  let txt = document.createTextNode(&#34;x&#34;);
+  span.className = &#34;close&#34;;
+  span.onclick = function () {
+    let element = this.parentElement;
+    element.remove();
+  };
+  span.appendChild(txt);
+  miLista[i].appendChild(span);
+}
+</code></pre>
+<p>Ahora, agregamos la función para que, cuando se haga clic sobre un ítem de la lista, este cambie su estilo para que se vea como una tarea terminada. Esto lo hacemos agregando y quitando una clase que aplicará los estilos necesarios para que cambie la apariencia de la tarea.</p>
+<pre><code language="language-bash" class="language-bash">// Agregamos un símbolo de &#34;marcado&#34; al hacer clic en un elemento de la lista
+let list = document.querySelector(&#34;ul&#34;);
+list.addEventListener(&#34;click&#34;, function (ev) {
+  console.log(ev.target.tagName);
+  if (ev.target.tagName === &#34;LI&#34;) {
+    ev.target.classList.toggle(&#34;checked&#34;);
+  }
+});
+</code></pre>
+<h4 is-upgraded>2. Asignar funcionalidad al botón para crear nuevas tareas</h4>
+<p>Por último, creamos y asignamos la función <code>newElement</code> al botón, para crear nuevas tareas. Esta función se encarga de tomar el texto que ingresamos al <code>input</code> para crear la nueva tarea en la lista, esta nueva tarea se crea con las funcionalidades de eliminar y marcar como terminada tarea, además se valida si el usuario ingresa texto en el <code>input</code> de lo contrario le pedimos que sea ingresado para poder crear una nueva tarea.</p>
+<p>Aqui tenemos la función <code>newElement</code></p>
+<pre><code language="language-bash" class="language-bash">// Crear un nuevo elemento de lista al hacer clic en el botón &#34;Agregar&#34;
+function newElement() {
+  let li = document.createElement(&#34;li&#34;);
+  let inputValue = document.getElementById(&#34;miInput&#34;).value;
+
+  if (inputValue === &#34;&#34;) {
+    alert(&#34;Ingresa un nombre para la tarea!&#34;);
+  } else {
+    let text = document.createTextNode(inputValue);
+    li.appendChild(text);
+    document.getElementById(&#34;miUL&#34;).appendChild(li);
+  }
+
+  // Agregamos a ese elemento que creamos el boton de eliminar
+  let span = document.createElement(&#34;span&#34;);
+  let txt = document.createTextNode(&#34;x&#34;);
+  span.className = &#34;close&#34;;
+  span.appendChild(txt);
+
+  span.onclick = function () {
+    let element = this.parentElement;
+    element.remove();
+  };
+
+  li.appendChild(span);
+
+  // Borramos el texto del input
+  document.getElementById(&#34;miInput&#34;).value = &#34;&#34;;
+}
+</code></pre>
+<p>Aqui la asignamos al botón</p>
+<pre><code language="language-bash" class="language-bash">document.querySelector(&#34;#btn&#34;).addEventListener(&#34;click&#34;, newElement);
+</code></pre>
+<p>En la carpeta <code>css</code> tenemos el archivo <code>style.css</code> con los estilos correspondientes. Ahora pasaremos a la siguiente sección donde te explicamos cómo modularizar este código.</p>
+<p>Puedes descargar todo el código del ejemplo desde GitHub aquí: <a href="https://github.com/ParqueSoftTi/JavaScript-2/tree/todo-app" target="_blank">todo-app</a>.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Sección 2 - Todo APP (módulos)" duration="15">
+        <p>Ahora vamos a explicar cómo podemos usar módulos para dividir el código visto en el ejemplo anterior.</p>
+<h2 is-upgraded>1 - Dividimos y exportamos.</h2>
+<p>Vamos a crear 3 archivos para cada parte del código. Estos archivos estarán en una carpeta llamada <code>modules</code> para tener una mejor organización. Primero creamos un archivo llamado <code>addButtonDelete.js</code>, aquí vamos a crear una arrow function donde encapsularemos toda la parte que se encarga de eliminar las tareas ya presentes en la lista y la exportamos por defecto. Recuerda que tienes dos formas de exportar, por defecto, <code>export default</code> y nombrada <code>export</code>, como lo visto en clase.</p>
+<pre><code language="language-bash" class="language-bash">const createButtonDelete = () =&gt; {
+  // Creamos un boton cerrar y lo agregamos a cada elemento de la lista
+  let miLista = document.getElementsByTagName(&#34;li&#34;);
+
+  for (let i = 0; i &lt; miLista.length; i++) {
+    let span = document.createElement(&#34;span&#34;);
+    let txt = document.createTextNode(&#34;x&#34;);
+    span.className = &#34;close&#34;;
+    span.appendChild(txt);
+    span.onclick = function () {
+      let element = this.parentElement;
+      element.style.display = &#34;none&#34;;
+    };
+    miLista[i].appendChild(span);
+  }
+};
+
+export default createButtonDelete;
+</code></pre>
+<p>Ahora creamos otro archivo llamado <code>addEventFinally.js</code>. Aquí, igual como en la función anterior, encapsulamos la parte que se encarga de marcar una tarea como finalizada, creamos el arrow function y lo exportamos por defecto.</p>
+<pre><code language="language-bash" class="language-bash">const addEventFinally = () =&gt; {
+  // Agregamos un símbolo de &#34;marcado&#34; al hacer clic en un elemento de la lista
+  let list = document.querySelector(&#34;ul&#34;);
+  list.addEventListener(
+    &#34;click&#34;,
+    function (ev) {
+      if (ev.target.tagName === &#34;LI&#34;) {
+        ev.target.classList.toggle(&#34;checked&#34;);
+      }
+    },
+    false
+  );
+};
+
+export default addEventFinally;
+</code></pre>
+<p>Creamos tambien un archivo llamado <code>newElement.js</code> que contendrá un arrow function que se encargará de encapsular todo lo necesario para crear una nueva tarea y agregarla a la lista de tareas existentes. Igualmente, la exportamos por defecto.</p>
+<pre><code language="language-bash" class="language-bash">const newElement = () =&gt; {
+  // Crear un nuevo elemento de lista al hacer clic en el botón &#34;Agregar&#34;
+  let li = document.createElement(&#34;li&#34;);
+  let inputValue = document.getElementById(&#34;miInput&#34;).value;
+  let t = document.createTextNode(inputValue);
+  li.appendChild(t);
+  if (inputValue === &#34;&#34;) {
+    alert(&#34;Ingresa un nombre para la tarea!&#34;);
+  } else {
+    document.getElementById(&#34;miUL&#34;).appendChild(li);
+  }
+
+  // document.getElementById(&#34;miInput&#34;).value = &#34;&#34;;
+
+  let span = document.createElement(&#34;span&#34;);
+  let txt = document.createTextNode(&#34;x&#34;);
+  span.className = &#34;close&#34;;
+  span.appendChild(txt);
+  span.onclick = function () {
+    let element = this.parentElement;
+    element.style.display = &#34;none&#34;;
+  };
+  li.appendChild(span);
+
+  // Borramos el texto del input
+  document.getElementById(&#34;miInput&#34;).value = &#34;&#34;;
+};
+
+// Se asigna la funcion newElement al boton con id btn en nuestro HTML
+const asignButton = () =&gt; {
+  document.querySelector(&#34;#btn&#34;).addEventListener(&#34;click&#34;, newElement);
+};
+
+export default asignButton;
+</code></pre>
+<h2 is-upgraded>2 - Importamos en un archivo principal (main.js).</h2>
+<p>Ahora que ya tenemos dividido el código en 3 partes, lo hemos modularizado y exportado, nos queda usar este código, y para ello vamos a crear un archivo más, llamado <code>main.js</code> donde haremos uso de los 3 módulos creados. Vamos a importarlos y ejecutarlos. Recuerda que, dependiendo de la forma en que se haya realizado la exportación, tambien debemos realizar la importación, ya sea nombrada o por defecto. En este caso utilizamos <code>import</code> seguido del nombre de la función exportada y de dónde la estamos importando utilizando <code>from</code>.</p>
+<pre><code language="language-bash" class="language-bash">import createButtonDelete from &#34;./modules/addButtonDelete.js&#34;;
+import addEventFinally from &#34;./modules/addEventFinally.js&#34;;
+import asignButton from &#34;./modules/newElement.js&#34;;
+
+createButtonDelete();
+addEventFinally();
+asignButton();
+</code></pre>
+<h2 is-upgraded>2 - Usamos el main.js en el index.html.</h2>
+<p>Lo último que nos queda es vincular el archivo principal dentro del <code>index.html</code>, en este caso sería el archivo <code>main.js</code>, ya que es aquí donde hacemos uso de los demás módulos y no necesitaremos vincular ningún otro archivo.</p>
+<p>A la hora de vincular módulos en HTML, debemos agregar en el elemento <code>script</code> el parámetro <code>type="module"</code>, ya que si no lo hacemos, nuestro código no va a funcionar. Esto sería de la siguiente forma.</p>
+<pre><code language="language-bash" class="language-bash">&lt;script type=&#34;module&#34; src=&#34;javascript/main.js&#34;&gt;&lt;/script&gt;
+</code></pre>
+<p>Puedes descargar todo el código del ejemplo desde GitHub aquí: <a href="https://github.com/ParqueSoftTi/JavaScript-2/tree/todo-app-modules" target="_blank">todo-app-module</a>.</p>
+<p>Y listo con esto ya hemos terminado de modularizar este ejemplo de un todoAPP y ya tienes todo lo necesario para realizar tu practica con un ejemplo que ya hemos trabajado en clase y que veremos en la siguiente sección.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Sección 3 - Utilizando módulos, dividir el ejemplo menú realizado en clase" duration="15">
+        <p>Es hora de que practiques lo aprendido y para ello vas a utilizar el ejemplo <code>menu</code> explicado en clase y tu trabajo sera, dividir el ejemplo utilizando módulos, te mostrare una posible opción.</p>
+<p>Una posible opción seria dividiendo el código en dos módulos, uno que contendría la función de <code>mostrarPrecio</code> y otro que tendría el código para pedir datos y podrían usar el módulo de <code>mostrarPrecio</code> dentro de <code>pedirDatos</code> y en el <code>main.js</code> solo llaman al módulo de <code>pedirDatos</code>.</p>
+<p class="image-container"><img alt="menu-option" src="img\\5b58390895b46d18.png"></p>
+<ul>
+<li>Recuerden que pueden dividir el código como les funcione mejor, les doy una opción, pero son libres de jugar con su código.</li>
+<li>El código del ejemplo de menú está en GitHub y lo pueden descargar aquí <a href="https://github.com/ParqueSoftTi/JavaScript-1/tree/menu-example" target="_blank">menu-example</a>.</li>
+<li>El ejemplo del todoApp sin módulos aquí <a href="https://github.com/ParqueSoftTi/JavaScript-1/tree/todo-app" target="_blank">todo-app</a>.</li>
+<li>El ejemplo del todoApp con módulos aquí <a href="https://github.com/ParqueSoftTi/JavaScript-1/tree/todo-app-modules" target="_blank">todo-app-modulos</a>.</li>
+</ul>
+<p>Y también tengan en cuenta que para llamar su archivo main.js en su index.html deben agregar el type module en el llamado de esta manera:</p>
+<pre><code language="language-bash" class="language-bash">&lt;script type=&#34;module&#34; src=&#34;javascript/main.js&#34;&gt;&lt;/script&gt;
+</code></pre>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
 </html>
