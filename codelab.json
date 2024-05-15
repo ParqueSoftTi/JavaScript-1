@@ -1,0 +1,17 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2024-05-14T23:24:34-05:00",
+  "id": "javascript-modules",
+  "duration": 45,
+  "title": "Codelab: Como usar los módulos en JavaScript",
+  "summary": "Como usar los módulos en JavaScript",
+  "source": "JavaScript-1-modules.md",
+  "theme": "",
+  "status": null,
+  "category": null,
+  "tags": [],
+  "url": "javascript-modules"
+}
